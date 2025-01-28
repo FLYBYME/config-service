@@ -85,12 +85,16 @@ module.exports = {
             async handler(ctx) {
                 const { key, value } = ctx.params;
 
-                const config = await this.findEntity(ctx, { query: { key } });
+                let config = await this.findEntity(ctx, { query: { key } });
                 if (!config) {
-                    return this.createEntity(ctx, { key, value });
+                    config = await this.createEntity(ctx, { key, value });
                 } else {
-                    return this.updateEntity(ctx, { id: config.id, value });
+                    config = await this.updateEntity(ctx, { id: config.id, value });
                 }
+
+                ctx.broadcast("config.set", { key, value });
+
+                return config;
             }
         },
         all: {

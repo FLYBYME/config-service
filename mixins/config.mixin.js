@@ -12,6 +12,11 @@ module.exports = {
         version: 1,
     }],
 
+    events: {
+        "config.set"(ctx) {
+            this.config.set(ctx.params.key, ctx.params.value);
+        }
+    },
 
     created() {
         this.config = new Map();
